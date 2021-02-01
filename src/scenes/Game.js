@@ -3,23 +3,28 @@ import Carrot from '../game/Carrot.js';
 
 export default class Game extends Phaser.Scene
 {
-    carrotsCollected = 0;
+    player
+    platforms
+    cursors
+    carrots
+    carrotsCollected
 
     constructor()
     {
         super('game')
     }
 
-    player
-    platforms
-    cursors
-    carrots
+    init()
+    {
+        this.carrotsCollected = 0;
+    }
 
     preload()
     {
         this.load.image('background', 'assets/bg_layer1.png');
         this.load.image('platform', 'assets/ground_grass.png');
         this.load.image('bunny-stand', 'assets/bunny1_stand.png');
+        this.load.image('bunny-jump', 'assets/bunny1_jump.png');
         this.load.image('carrot', 'assets/carrot.png');
         this.cursors = this.input.keyboard.createCursorKeys();
     }
@@ -82,6 +87,12 @@ export default class Game extends Phaser.Scene
         if(touchingDown)
         {
             this.player.setVelocityY(-300);
+            this.player.setTexture('bunny-jump');
+        }
+        const vy = this.player.body.velocity.y;
+        if (vy > 0 && this.player.texture.key !== 'bunny-stand')
+        {
+            this.player.setTexture('bunny-stand');
         }
 
         if (this.cursors.left.isDown && !touchingDown)
