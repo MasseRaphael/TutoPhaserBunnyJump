@@ -11,6 +11,7 @@ export default class Game extends Phaser.Scene
     player
     platforms
     cursors
+    carrots
 
     preload()
     {
@@ -52,8 +53,11 @@ export default class Game extends Phaser.Scene
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setDeadzone(this.scale.width * 1.5);
 
-        const carrot = new Carrot(this, 240, 320, 'carrot');
-        this.add.existing(carrot);
+        this.carrots = this.physics.add.group({
+            classType: Carrot,
+        });
+
+        this.physics.add.collider(this.platforms, this.carrots);
     }
 
     update(t, dt)
@@ -87,6 +91,8 @@ export default class Game extends Phaser.Scene
             {
                 platform.y = scrollY - Phaser.Math.Between(50, 100);
                 platform.body.updateFromGameObject();
+
+                this.addCarrotAbove(platform);
             }
         })
 
@@ -95,16 +101,29 @@ export default class Game extends Phaser.Scene
     }
 
     horizontalWrap(sprite)
+    {
+        const halfWidth = sprite.displayWidth * 0.5;
+        const gameWidth = this.scale.width;
+        if(sprite.x < -halfWidth)
         {
-            const halfWidth = sprite.displayWidth * 0.5;
-            const gameWidth = this.scale.width;
-            if(sprite.x < -halfWidth)
-            {
-                sprite.x = gameWidth + halfWidth;
-            }
-            else if(sprite.x > gameWidth + halfWidth)
-            {
-                sprite.x = -halfWidth;
-            }
+            sprite.x = gameWidth + halfWidth;
         }
+        else if(sprite.x > gameWidth + halfWidth)
+        {
+            sprite.x = -halfWidth;
+        }
+    }
+
+    addCarrotAbove(sprite)
+    {
+        const y = sprite.y - sprite.displayHeight;
+
+        const carrot = this.carrots.get(sprite.x, y, 'carrot');
+
+        this.add.existing(carrot);
+
+        carrot.body.setSize(carrot.width, carrot.height);
+
+        return carrot;
+    }
 }
