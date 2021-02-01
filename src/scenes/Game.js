@@ -26,6 +26,7 @@ export default class Game extends Phaser.Scene
         this.load.image('bunny-stand', 'assets/bunny1_stand.png');
         this.load.image('bunny-jump', 'assets/bunny1_jump.png');
         this.load.image('carrot', 'assets/carrot.png');
+        this.load.audio('jump', 'assets/sfx/phaseJump1.ogg');
         this.cursors = this.input.keyboard.createCursorKeys();
     }
 
@@ -88,6 +89,7 @@ export default class Game extends Phaser.Scene
         {
             this.player.setVelocityY(-300);
             this.player.setTexture('bunny-jump');
+            this.sound.play('jump');
         }
         const vy = this.player.body.velocity.y;
         if (vy > 0 && this.player.texture.key !== 'bunny-stand')
