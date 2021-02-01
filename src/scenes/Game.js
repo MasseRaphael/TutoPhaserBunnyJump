@@ -58,9 +58,17 @@ export default class Game extends Phaser.Scene
         });
 
         this.physics.add.collider(this.platforms, this.carrots);
+
+        this.physics.add.overlap(
+            this.player,
+            this.carrots,
+            this.handleCollectCarrot,
+            undefined,
+            this
+        );
     }
 
-    update(t, dt)
+    update()
     {
         const touchingDown = this.player.body.touching.down;
         
@@ -120,10 +128,22 @@ export default class Game extends Phaser.Scene
 
         const carrot = this.carrots.get(sprite.x, y, 'carrot');
 
+        carrot.setActive(true);
+        carrot.setVisible(true);
+
         this.add.existing(carrot);
 
         carrot.body.setSize(carrot.width, carrot.height);
 
+        this.physics.world.enable(carrot);
+
         return carrot;
+    }
+
+    handleCollectCarrot(player, carrot)
+    {
+        this.carrots.killAndHide(carrot);
+
+        this.physics.world.disableBody(carrot.body);
     }
 }
