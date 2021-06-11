@@ -4,4 +4,4 @@ Tutoriel effectuer en cours pour apprendre à mettre en place un projet Phaser e
 
 ## Demo
 
-[Vercel](https://tuto-phaser-bunny-jump.vercel.app/)
+Sur [Vercel](https://tuto-phaser-bunny-jump.vercel.app/)
